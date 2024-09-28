@@ -94,7 +94,7 @@ WHERE first_name LIKE 'sam%';
 
 SELECT first_name
 FROM teachers
-WHERE first_name ILIKE 'sam%';
+WHERE first_name ILIKE '%sam%';
 
 -- Listing 3-9: Combining operators using AND and OR
 
@@ -128,3 +128,22 @@ SELECT first_name, last_name, school, hire_date, salary
 FROM teachers
 WHERE school LIKE '%Roos%'
 ORDER BY hire_date DESC;
+
+-- Exercises 
+TABLE teachers;
+
+SELECT school, first_name, last_name
+FROM teachers
+ORDER BY school, last_name;
+
+SELECT first_name, last_name
+FROM teachers
+WHERE 	first_name LIKE 'S%'
+		AND salary > 40000
+;	
+
+SELECT first_name, last_name, salary, hire_date
+FROM teachers
+WHERE hire_date > '2010-01-01'
+ORDER BY salary DESC 
+;
