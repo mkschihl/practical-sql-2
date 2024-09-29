@@ -36,6 +36,11 @@ VALUES
     (2.13579, 2.13579, 2.13579),
     (2.1357987654, 2.1357987654, 2.1357987654);
 
+INSERT INTO number_data_types
+VALUES
+    (2.1357987654321, 2.1357987654321, 2.1357987654321);
+
+
 SELECT * FROM number_data_types;
 
 -- Listing 4-3: Rounding issues with float columns
@@ -45,8 +50,9 @@ SELECT
     numeric_column * 10000000 AS fixed,
     real_column * 10000000 AS floating
 FROM number_data_types
-WHERE numeric_column = .7;
+--WHERE numeric_column = .7;
 
+table number_data_types;
 -- Listing 4-4: The timestamp and interval types in action
 
 CREATE TABLE date_time_types (
@@ -60,6 +66,15 @@ VALUES
     ('2022-12-31 01:00 -8','1 month'),
     ('2022-12-31 01:00 Australia/Melbourne','1 century'),
     (now(),'1 week');
+
+INSERT INTO date_time_types
+VALUES
+    ('2022-12-31 01:00 PST','2 days');
+
+INSERT INTO date_time_types
+VALUES
+    ('2022-12-31 01:00 PDT','2 days');
+
 
 SELECT * FROM date_time_types;
 
@@ -88,3 +103,8 @@ SELECT CAST(char_column AS integer) FROM char_data_types;
 -- Alternate notation for CAST is the double-colon:
 SELECT timestamp_column::varchar(10)
 FROM date_time_types;
+
+/* Exercises */
+-- 1. smallint
+-- 2. varchar(), different sorting
+-- 3. error
