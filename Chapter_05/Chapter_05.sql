@@ -46,7 +46,7 @@ SELECT * FROM us_counties_pop_est_2019;
 -- Windows users: Please check the Note on PAGE XXXXXX as well.
 
 COPY us_counties_pop_est_2019
-FROM 'C:\YourDirectory\us_counties_pop_est_2019.csv'
+FROM 'C:\Users\micha\SQL\us_counties_pop_est_2019.csv'
 WITH (FORMAT CSV, HEADER);
 
 -- Checking the data
@@ -55,7 +55,7 @@ SELECT * FROM us_counties_pop_est_2019;
 
 SELECT county_name, state_name, area_land
 FROM us_counties_pop_est_2019
-ORDER BY area_land DESC
+ORDER BY area_land DESC 
 LIMIT 3;
 
 SELECT county_name, state_name, internal_point_lat, internal_point_lon
@@ -79,11 +79,11 @@ CREATE TABLE supervisor_salaries (
 -- Listing 5-5: Importing salaries data from CSV to three table columns
 
 COPY supervisor_salaries (town, supervisor, salary)
-FROM 'C:\YourDirectory\supervisor_salaries.csv'
+FROM 'C:\Users\micha\SQL\supervisor_salaries.csv'
 WITH (FORMAT CSV, HEADER);
 
 -- Check the data
-SELECT * FROM supervisor_salaries ORDER BY id LIMIT 2;
+SELECT * FROM supervisor_salaries; -- ORDER BY id LIMIT 2;
 
 
 -- Listing 5-6: Importing a subset of rows with WHERE
@@ -91,24 +91,25 @@ SELECT * FROM supervisor_salaries ORDER BY id LIMIT 2;
 DELETE FROM supervisor_salaries;
 
 COPY supervisor_salaries (town, supervisor, salary)
-FROM 'C:\YourDirectory\supervisor_salaries.csv'
+FROM 'C:\Users\micha\SQL\supervisor_salaries.csv'
 WITH (FORMAT CSV, HEADER)
 WHERE town = 'New Brillig';
 
 SELECT * FROM supervisor_salaries;
 
-
 -- Listing 5-7: Using a temporary table to add a default value to a column during
 -- import
 
-DELETE FROM supervisor_salaries;
+DROP TABLE supervisor_salaries_temp ;
 
 CREATE TEMPORARY TABLE supervisor_salaries_temp 
     (LIKE supervisor_salaries INCLUDING ALL);
 
 COPY supervisor_salaries_temp (town, supervisor, salary)
-FROM 'C:\YourDirectory\supervisor_salaries.csv'
+FROM 'C:\Users\micha\SQL\supervisor_salaries.csv'
 WITH (FORMAT CSV, HEADER);
+
+TABLE supervisor_salaries_temp ;
 
 INSERT INTO supervisor_salaries (town, county, supervisor, salary)
 SELECT town, 'Mills', supervisor, salary
@@ -117,7 +118,7 @@ FROM supervisor_salaries_temp;
 DROP TABLE supervisor_salaries_temp;
 
 -- Check the data
-SELECT * FROM supervisor_salaries ORDER BY id LIMIT 2;
+SELECT * FROM supervisor_salaries ORDER BY id ; --LIMIT 2;
 
 
 -- Listing 5-8: Exporting an entire table with COPY
@@ -143,3 +144,4 @@ COPY (
      )
 TO 'C:\YourDirectory\us_counties_mill_export.csv'
 WITH (FORMAT CSV, HEADER);
+
