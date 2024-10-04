@@ -25,7 +25,7 @@ SELECT |/ 10;         -- square root (operator)
 SELECT sqrt(10);      -- square root (function)
 SELECT ||/ 10;        -- cube root
 SELECT factorial(4);  -- factorial (function)
-SELECT 4 !;           -- factorial (operator; PostgreSQL 13 and earlier only)
+SELECT 4 ! ;           -- factorial (operator; PostgreSQL 13 and earlier only)
 
 
 -- Order of operations
@@ -56,7 +56,7 @@ SELECT county_name AS county,
        deaths_2019 AS deaths,
        births_2019 - deaths_2019 AS natural_increase
 FROM us_counties_pop_est_2019
-ORDER BY state_name, county_name;
+ORDER BY deaths DESC, state_name, county_name;
 
 -- Listing 6-6: Checking census data totals
 
@@ -137,7 +137,7 @@ FROM us_counties_pop_est_2019;
 
 -- Listing 6-12: Passing an array of values to percentile_cont()
 
--- quartiles
+-- quartiles       
 SELECT percentile_cont(ARRAY[.25,.5,.75])
        WITHIN GROUP (ORDER BY pop_est_2019) AS quartiles
 FROM us_counties_pop_est_2019;
@@ -149,9 +149,12 @@ SELECT percentile_cont(ARRAY[.2,.4,.6,.8])
 FROM us_counties_pop_est_2019;
 
 -- deciles
-SELECT percentile_cont(ARRAY[.1,.2,.3,.4,.5,.6,.7,.8,.9])
+SELECT state_fips, percentile_cont(ARRAY[.1,.2,.3,.4,.5,.6,.7,.8,.9])
        WITHIN GROUP (ORDER BY pop_est_2019) AS deciles
-FROM us_counties_pop_est_2019;
+FROM us_counties_pop_est_2019
+GROUP BY state_fips
+ORDER BY state_fips
+;
 
 -- Listing 6-13: Using unnest() to turn an array into rows
 
@@ -165,3 +168,26 @@ FROM us_counties_pop_est_2019;
 
 SELECT mode() WITHIN GROUP (ORDER BY births_2019)
 FROM us_counties_pop_est_2019;
+
+table us_counties_pop_est_2019 ; 
+
+/* Chapter 6 Exercises */
+-- 1. Area of circle with radius 5
+SELECT 5*pi()^2 ;
+-- 2. Calculate ratio of births to deaths for each county of NY. Which region had highest in 2019
+select county_name, avg(cast(births_2019 as numeric) / deaths_2019) as b_to_d_ratio
+from us_counties_pop_est_2019
+where state_name = 'New York'
+group by county_name
+order by 2 desc 
+;
+-- 3. Was the 2019 median county population estimate higher in CA or NY?
+SELECT state_name, 
+		sum(pop_est_2019) AS county_sum,
+       round(avg(pop_est_2019), 0) AS county_average,
+       percentile_cont(.5)
+       WITHIN GROUP (ORDER BY pop_est_2019) AS county_median
+FROM us_counties_pop_est_2019
+where state_name in ('California', 'New York')
+group by state_name;
+
