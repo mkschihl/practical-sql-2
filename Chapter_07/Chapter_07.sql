@@ -38,7 +38,8 @@ VALUES
     (4, 'Michael', 'Taylor', 89500, 2);
 
 -- Listing 7-2: Joining the employees and departments tables
-
+table employees ;
+table departments ;
 SELECT *
 FROM employees JOIN departments
 ON employees.dept_id = departments.dept_id
@@ -90,6 +91,7 @@ USING (id)
 ORDER BY district_2020.id;
 
 -- Listing 7-6: Using LEFT JOIN
+table district_2020 ;
 
 SELECT *
 FROM district_2020 LEFT JOIN district_2035
@@ -98,6 +100,7 @@ ORDER BY district_2020.id;
 
 -- Listing 7-7: Using RIGHT JOIN
 
+table district_2035 ;
 SELECT *
 FROM district_2020 RIGHT JOIN district_2035
 ON district_2020.id = district_2035.id
@@ -119,7 +122,8 @@ ORDER BY district_2020.id, district_2035.id;
 -- Alternately, a CROSS JOIN can be written with a comma-join syntax:
 SELECT *
 FROM district_2020, district_2035
-ORDER BY district_2020.id, district_2035.id;
+ORDER BY district_2020.id, district_2035.id
+;
 
 -- Or it can be written as a JOIN with true in the ON clause:
 SELECT *
@@ -243,7 +247,7 @@ CREATE TABLE us_counties_pop_est_2010 (
 );
 
 COPY us_counties_pop_est_2010
-FROM 'C:\YourDirectory\us_counties_pop_est_2010.csv'
+FROM 'C:\Users\micha\SQL\us_counties_pop_est_2010.csv'
 WITH (FORMAT CSV, HEADER);
 
 SELECT c2019.county_name,
@@ -258,3 +262,39 @@ FROM us_counties_pop_est_2019 AS c2019
 ON c2019.state_fips = c2010.state_fips
     AND c2019.county_fips = c2010.county_fips
 ORDER BY pct_change DESC;
+
+/* Chapter 7 Exercises */
+-- 1. Which county had the greatest percentage decrease?
+SELECT c2019.county_name,
+       c2019.state_name,
+       c2019.pop_est_2019 AS pop_2019,
+       c2010.estimates_base_2010 AS pop_2010,
+       c2019.pop_est_2019 - c2010.estimates_base_2010 AS raw_change,
+       round( (c2019.pop_est_2019::numeric - c2010.estimates_base_2010)
+           / c2010.estimates_base_2010 * 100, 1 ) AS pct_change
+FROM us_counties_pop_est_2019 AS c2019
+    JOIN us_counties_pop_est_2010 AS c2010
+ON c2019.state_fips = c2010.state_fips
+    AND c2019.county_fips = c2010.county_fips
+ORDER BY pct_change ASC;
+
+-- 2. 
+table us_counties_pop_est_2019 ;
+table us_counties_pop_est_2010 ;
+
+select state_fips, county_fips, county_name, pop_est_2019 as pop_est, 2019 as year
+FROM us_counties_pop_est_2019 
+union 
+select state_fips, county_fips, county_name, estimates_base_2010 as pop_est, 2010 as year 
+from us_counties_pop_est_2010 
+order by 1, 2, 3
+;
+
+-- 3.
+SELECT percentile_cont(0.50) within group (order by round( (c2019.pop_est_2019::numeric - c2010.estimates_base_2010)
+           / c2010.estimates_base_2010 * 100, 1 ) ) AS pct_change_median
+FROM us_counties_pop_est_2019 AS c2019
+    JOIN us_counties_pop_est_2010 AS c2010
+ON c2019.state_fips = c2010.state_fips
+    AND c2019.county_fips = c2010.county_fips
+--ORDER BY pct_change ASC;
