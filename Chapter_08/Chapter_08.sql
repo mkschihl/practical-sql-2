@@ -29,6 +29,8 @@ CREATE TABLE natural_key_example (
 -- Note: You will need to create the natural_key_example table
 -- using either of the two statements in Listing 8-1.
 
+table natural_key_example ;
+
 INSERT INTO natural_key_example (license_id, first_name, last_name)
 VALUES ('T229901', 'Gem', 'Godfrey');
 
@@ -54,6 +56,7 @@ VALUES(775, '2022-01-23', 'Y');
 INSERT INTO natural_key_composite_example (student_id, school_day, present)
 VALUES(775, '2022-01-23', 'N');
 
+table natural_key_composite_example ;
 -- Listing 8-5: Declaring a bigint column as a surrogate key using IDENTITY
 
 CREATE TABLE surrogate_key_example (
@@ -107,7 +110,9 @@ VALUES ('A203391', '2022-03-17', 'T229901');
 
 INSERT INTO registrations (registration_id, registration_date, license_id)
 VALUES ('A75772', '2022-03-17', 'T000001');
-
+ 
+table licenses ; 
+table registrations ;
 -- Listing 8-8: Examples of CHECK constraints
 
 CREATE TABLE check_constraint_example (
@@ -125,6 +130,15 @@ VALUES ('admin');
 
 INSERT INTO check_constraint_example (salary)
 VALUES (-10000);
+
+-- MKS Added 
+table check_constraint_example ;
+
+INSERT INTO check_constraint_example (user_role, salary)
+VALUES ('Admin', 100000);
+
+INSERT INTO check_constraint_example (user_role, salary)
+VALUES ('Staff', 200000);
 
 -- Listing 8-9: A UNIQUE constraint example
 
@@ -146,6 +160,8 @@ VALUES ('Betty', 'Diaz', 'bdiaz@example.org');
 INSERT INTO unique_constraint_example (first_name, last_name, email)
 VALUES ('Sasha', 'Lee', 'slee@example.org');
 
+table unique_constraint_example ;
+
 -- Listing 8-10: A NOT NULL constraint example
 
 CREATE TABLE not_null_example (
@@ -159,6 +175,11 @@ CREATE TABLE not_null_example (
 INSERT INTO not_null_example (first_name, last_name)
 VALUES ('Sting', NULL);
 
+-- MKS Added
+INSERT INTO not_null_example (first_name, last_name)
+VALUES ('Sting', 'Bling');
+
+table not_null_example;
 -- Listing 8-11: Dropping and adding a primary key and a NOT NULL constraint
 
 -- Drop
@@ -186,9 +207,12 @@ CREATE TABLE new_york_addresses (
 );
 
 COPY new_york_addresses
-FROM 'C:\YourDirectory\city_of_new_york.csv'
+FROM 'C:\Users\micha\SQL\city_of_new_york.csv'
 WITH (FORMAT CSV, HEADER);
 
+select * 
+from new_york_addresses 
+;
 -- Listing 8-13: Benchmark queries for index performance
 
 EXPLAIN ANALYZE SELECT * FROM new_york_addresses
