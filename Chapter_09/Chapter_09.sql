@@ -58,10 +58,12 @@ CREATE TABLE pls_fy2018_libraries (
 );
 
 COPY pls_fy2018_libraries
-FROM 'C:\YourDirectory\pls_fy2018_libraries.csv'
+FROM 'C:\Users\micha\SQL\pls_fy2018_libraries.csv'
 WITH (FORMAT CSV, HEADER);
 
 CREATE INDEX libname_2018_idx ON pls_fy2018_libraries (libname);
+
+select count(*) from pls_fy2018_libraries limit 10;
 
 -- Listing 9-2: Creating and filling the 2017 and 2016 Public Libraries Survey tables
 
@@ -166,16 +168,15 @@ CREATE TABLE pls_fy2016_libraries (
 );
 
 COPY pls_fy2017_libraries
-FROM 'C:\YourDirectory\pls_fy2017_libraries.csv'
+FROM 'C:\Users\micha\SQL\pls_fy2017_libraries.csv'
 WITH (FORMAT CSV, HEADER);
 
 COPY pls_fy2016_libraries
-FROM 'C:\YourDirectory\pls_fy2016_libraries.csv'
+FROM 'C:\Users\micha\SQL\pls_fy2016_libraries.csv'
 WITH (FORMAT CSV, HEADER);
 
 CREATE INDEX libname_2017_idx ON pls_fy2017_libraries (libname);
 CREATE INDEX libname_2016_idx ON pls_fy2016_libraries (libname);
-
 
 -- Listing 9-3: Using count() for table row counts
 
@@ -338,3 +339,33 @@ GROUP BY pls18.stabr
 HAVING sum(pls18.visits) > 50000000
 ORDER BY chg_2018_17 DESC;
 
+-- Exercises
+select count(*) from pls_fy2018_libraries where totstaff <= 0 limit 10;
+
+SELECT pls18.stabr,
+       sum(pls18.totstaff) AS totstaff_2018,
+       sum(pls17.totstaff) AS totstaff_2017,
+       sum(pls16.totstaff) AS totstaff_2016,
+       round( (sum(pls18.totstaff::numeric) - sum(pls17.totstaff)) /
+            sum(pls17.totstaff) * 100, 1 ) AS chg_2018_17,
+       round( (sum(pls17.totstaff::numeric) - sum(pls16.totstaff)) /
+            sum(pls16.totstaff) * 100, 1 ) AS chg_2017_16
+FROM pls_fy2018_libraries pls18
+       JOIN pls_fy2017_libraries pls17 ON pls18.fscskey = pls17.fscskey
+       JOIN pls_fy2016_libraries pls16 ON pls18.fscskey = pls16.fscskey
+WHERE pls18.totstaff >= 0
+       AND pls17.totstaff >= 0
+       AND pls16.totstaff >= 0
+GROUP BY pls18.stabr
+ORDER BY chg_2018_17 DESC;
+
+
+SELECT pls18.*, 2018 as yr
+from pls_fy2018_libraries pls18
+union 
+SELECT pls17.*, 2017 as yr
+from pls_fy2017_libraries pls17
+union 
+SELECT pls16.*, 2016 as yr
+from pls_fy2016_libraries pls16
+;
