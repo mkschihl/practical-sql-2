@@ -22,7 +22,7 @@ CREATE TABLE meat_poultry_egg_establishments (
 );
 
 COPY meat_poultry_egg_establishments
-FROM 'C:\YourDirectory\MPI_Directory_by_Establishment_Name.csv'
+FROM 'C:\Users\micha\SQL\MPI_Directory_by_Establishment_Name.csv'
 WITH (FORMAT CSV, HEADER);
 
 CREATE INDEX company_idx ON meat_poultry_egg_establishments (company);
@@ -93,6 +93,7 @@ SELECT
     (SELECT count(*) FROM meat_poultry_egg_establishments_backup) AS backup;
 
 -- Listing 10-9: Creating and filling the st_copy column with ALTER TABLE and UPDATE
+select * from meat_poultry_egg_establishments limit 10;
 
 ALTER TABLE meat_poultry_egg_establishments ADD COLUMN st_copy text;
 
@@ -161,11 +162,21 @@ UPDATE meat_poultry_egg_establishments
 SET zip = '00' || zip
 WHERE st IN('PR','VI') AND length(zip) = 3;
 
+select * 
+from meat_poultry_egg_establishments 
+WHERE st IN('PR','VI') AND length(zip_copy) = 3;
+;
+
 -- Listing 10-17: Modify codes in the zip column missing one leading zero
 
 UPDATE meat_poultry_egg_establishments
 SET zip = '0' || zip
 WHERE st IN('CT','MA','ME','NH','NJ','RI','VT') AND length(zip) = 4;
+
+select * 
+from meat_poultry_egg_establishments 
+WHERE st IN('CT','MA','ME','NH','NJ','RI','VT') AND length(zip_copy) = 4;
+;
 
 -- Listing 10-18: Creating and filling a state_regions table
 
@@ -175,9 +186,10 @@ CREATE TABLE state_regions (
 );
 
 COPY state_regions
-FROM 'C:\YourDirectory\state_regions.csv'
+FROM 'C:\Users\micha\SQL\state_regions.csv'
 WITH (FORMAT CSV, HEADER);
 
+table state_regions ;
 -- Listing 10-19: Adding and updating an inspection_deadline column
 
 ALTER TABLE meat_poultry_egg_establishments
@@ -259,4 +271,47 @@ ALTER TABLE meat_poultry_egg_establishments_backup
 ALTER TABLE meat_poultry_egg_establishments_temp 
     RENAME TO meat_poultry_egg_establishments_backup;
 
+-- Exercises
 
+table meat_poultry_egg_establishments ;
+
+select activities, count(*) as n_obs
+from  meat_poultry_egg_establishments 
+group by 1
+order by 1
+;
+
+ALTER TABLE meat_poultry_egg_establishments
+    ADD COLUMN meat_processing bool,
+	ADD COLUMN poultry_processing bool;
+
+UPDATE meat_poultry_egg_establishments
+SET meat_processing = TRUE
+WHERE activities like '%Meat%' 
+;
+
+select * from  meat_poultry_egg_establishments where meat_processing is true limit 10;
+
+UPDATE meat_poultry_egg_establishments
+SET poultry_processing = TRUE
+WHERE activities like '%Poultry%' 
+;
+
+select	sum(case
+				when meat_processing is true then 1
+				else 0
+			end) as n_meat,
+		sum(case
+				when poultry_processing is true then 1
+				else 0
+			end) as n_poultry,
+		sum(case
+				when meat_processing is true or poultry_processing is true then 1
+				else 0
+			end) as n_meat_or_poultry,
+		sum(case
+				when meat_processing is true and poultry_processing is true then 1
+				else 0
+			end) as n_meat_and_poultry		
+from	meat_poultry_egg_establishments
+;
