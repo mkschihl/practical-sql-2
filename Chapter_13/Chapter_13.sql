@@ -30,6 +30,8 @@ WHERE pop_est_2019 < (
 
 SELECT count(*) FROM us_counties_2019_top10;
 
+table us_counties_2019_top10;
+
 -- Listing 13-3: Subquery as a derived table in a FROM clause
 
 SELECT round(calcs.average, 0) as average,
@@ -245,7 +247,7 @@ CREATE TABLE ice_cream_survey (
 );
 
 COPY ice_cream_survey
-FROM 'C:\YourDirectory\ice_cream_survey.csv'
+FROM 'C:\Users\micha\SQL\ice_cream_survey.csv'
 WITH (FORMAT CSV, HEADER);
 
 -- view the data
@@ -254,6 +256,7 @@ FROM ice_cream_survey
 ORDER BY response_id
 LIMIT 5;
 
+table ice_cream_survey ;
 -- Listing 13-17: Generating the ice cream survey crosstab
 
 SELECT *
@@ -283,7 +286,7 @@ CREATE TABLE temperature_readings (
 );
 
 COPY temperature_readings
-FROM 'C:\YourDirectory\temperature_readings.csv'
+FROM 'C:\Users\micha\SQL\temperature_readings.csv'
 WITH (FORMAT CSV, HEADER);
 
 -- Listing 13-19: Generating the temperature readings crosstab
@@ -346,3 +349,46 @@ SELECT station_name, max_temperature_group, count(*)
 FROM temps_collapsed
 GROUP BY station_name, max_temperature_group
 ORDER BY station_name, count(*) DESC;
+
+-- Exercises 
+ -- 1. 
+select * 
+from temperature_readings 
+where station_name like '%WAIKIKI%'
+; 
+ 
+WITH temps_collapsed (station_name, max_temperature_group) AS
+    (SELECT station_name,
+           CASE WHEN max_temp >= 90 THEN '90 or more'
+                WHEN max_temp >= 88 AND max_temp < 90 THEN '88-89'
+                WHEN max_temp >= 86 AND max_temp < 88 THEN '86-87'
+                WHEN max_temp >= 84 AND max_temp < 86 THEN '84-85'
+                WHEN max_temp >= 82 AND max_temp < 84 THEN '82-83'
+				WHEN max_temp >= 80 AND max_temp < 82 THEN '80-81'
+                WHEN max_temp < 80 THEN '79 or less'
+                ELSE 'No reading'
+            END
+    FROM temperature_readings
+	WHERE station_name like '%WAIKIKI%')
+SELECT station_name, max_temperature_group, count(*)
+FROM temps_collapsed
+GROUP BY station_name, max_temperature_group
+ORDER BY station_name, count(*) DESC;
+
+ -- 2
+
+SELECT *
+FROM crosstab('SELECT flavor,
+                      office,
+                      count(*)
+               FROM ice_cream_survey
+               GROUP BY flavor, office
+               ORDER BY flavor',
+              'SELECT office
+               FROM ice_cream_survey
+               GROUP BY office
+               ORDER BY office')
+AS (flavor text,
+    downtown bigint,
+    midtown bigint,
+    uptown bigint);	
