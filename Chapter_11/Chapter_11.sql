@@ -19,7 +19,7 @@ CREATE TABLE acs_2014_2018_stats (
 );
 
 COPY acs_2014_2018_stats
-FROM 'C:\YourDirectory\acs_2014_2018_stats.csv'
+FROM 'C:\Users\micha\SQL\acs_2014_2018_stats.csv'
 WITH (FORMAT CSV, HEADER);
 
 SELECT * FROM acs_2014_2018_stats;
@@ -144,7 +144,7 @@ CREATE TABLE cbp_naics_72_establishments (
 );
 
 COPY cbp_naics_72_establishments
-FROM 'C:\YourDirectory\cbp_naics_72_establishments.csv'
+FROM 'C:\Users\micha\SQL\cbp_naics_72_establishments.csv'
 WITH (FORMAT CSV, HEADER);
 
 SELECT *
@@ -177,7 +177,7 @@ CREATE TABLE us_exports (
 );
 
 COPY us_exports
-FROM 'C:\YourDirectory\us_exports.csv'
+FROM 'C:\Users\micha\SQL\us_exports.csv'
 WITH (FORMAT CSV, HEADER);
 
 -- View the monthly citrus data
@@ -194,4 +194,37 @@ SELECT year, month, citrus_export_value,
        AS twelve_month_avg
 FROM us_exports
 ORDER BY year, month;
+
+-- Exercises
+ -- 1.
+ table acs_2014_2018_stats;
+
+SELECT corr(median_hh_income, pct_masters_higher)
+    AS masters_income_r
+FROM acs_2014_2018_stats;
+
+ -- 2. 
+
+table us_exports ;
+SELECT year, month, soybeans_export_value,
+    round(   
+       avg(soybeans_export_value) 
+            OVER(ORDER BY year, month 
+                 ROWS BETWEEN 11 PRECEDING AND CURRENT ROW), 0)
+       AS twelve_month_avg
+FROM us_exports
+ORDER BY year, month;
+
+ -- 3.
+
+TABLE pls_fy2018_libraries ;
+
+select rank() over (partition by null order by round( (visits::numeric / popu_lsa) * 1000, 1 ) desc ),
+		*, 
+		round( (visits::numeric / popu_lsa) * 1000, 1 ) AS visits_per_1000,
+		round(visits::numeric / popu_lsa, 1) AS visits_per_pop
+from pls_fy2018_libraries 
+where popu_lsa >= 250000
+order by 1 
+;
 
