@@ -68,11 +68,12 @@ SELECT current_setting('timezone');
 
 -- Using current_setting() inside another function:
 SELECT make_timestamptz(2022, 2, 22, 18, 4, 30.3, current_setting('timezone'));
-
+SELECT make_timestamptz(2024, 10, 14, 9, 27, 30.123456789, current_setting('timezone'));
 -- Listing 12-5: Showing time zone abbreviations and names
 
 SELECT * FROM pg_timezone_abbrevs ORDER BY abbrev;
-SELECT * FROM pg_timezone_names ORDER BY name;
+SELECT * FROM pg_timezone_abbrevs ORDER BY 2, abbrev;
+SELECT * FROM pg_timezone_names ORDER BY 3, name;
 
 -- Filter to find one
 SELECT * FROM pg_timezone_names
@@ -153,7 +154,7 @@ COPY nyc_yellow_taxi_trips (
     improvement_surcharge,
     total_amount
    )
-FROM 'C:\YourDirectory\nyc_yellow_taxi_trips.csv'
+FROM 'C:\Users\micha\SQL\nyc_yellow_taxi_trips.csv'
 WITH (FORMAT CSV, HEADER);
 
 CREATE INDEX tpep_pickup_idx
@@ -240,4 +241,45 @@ SELECT segment,
        justify_interval(sum(arrival - departure)
                         OVER (ORDER BY trip_id)) AS cume_duration
 FROM train_rides;
+
+-- Exercises
+
+ -- 1.
+SELECT  tpep_dropoff_datetime - tpep_pickup_datetime AS ride_duration, *
+FROM nyc_yellow_taxi_trips
+ORDER BY 1 ASC 
+;
+
+ -- 2.
+SELECT * FROM pg_timezone_names
+WHERE 	name LIKE '%Johannesburg%'
+		or name LIKE '%Moscow%'
+		or name LIKE '%Melbourne%'
+ORDER BY name;
+ 
+select * from time_zone_test ;
+SET TIME ZONE 'US/Eastern';
+INSERT INTO time_zone_test VALUES ('2100-01-01 0:00');
+
+SELECT 	test_date AT TIME ZONE 'Europe/London' as london,
+		test_date AT TIME ZONE 'Africa/Johannesburg' as johannesburg,
+		test_date AT TIME ZONE 'Australia/Melbourne' as melbourne,
+		test_date AT TIME ZONE 'Europe/Moscow' as moscow
+from time_zone_test
+;
+
+ -- 3. 
+select * 
+FROM nyc_yellow_taxi_trips
+;
+
+select corr(date_part('epoch', tpep_dropoff_datetime) - date_part('epoch', tpep_pickup_datetime), total_amount) as r_trip_length_vs_cost
+FROM nyc_yellow_taxi_trips
+where date_part('hour', tpep_dropoff_datetime) - date_part('hour', tpep_pickup_datetime) <= 3
+; -- 0.2
+
+select corr(trip_distance, total_amount) as r_trip_distance_vs_cost
+FROM nyc_yellow_taxi_trips
+where date_part('hour', tpep_dropoff_datetime) - date_part('hour', tpep_pickup_datetime) <= 3
+; -- 0.85
 
