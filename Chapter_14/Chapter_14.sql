@@ -51,6 +51,8 @@ SELECT substring('The game starts at 7 p.m. on May 2, 2024.' from 'May|June');
 SELECT substring('The game starts at 7 p.m. on May 2, 2024.' from '\d{4}');
 -- May followed by a space, digit, comma, space, and four digits.
 SELECT substring('The game starts at 7 p.m. on May 2, 2024.' from 'May \d, \d{4}');
+-- May followed by a space, 1 or 2 digits, comma, space, and four digits.
+SELECT substring('The game starts at 7 p.m. on May 22, 2024.' from 'May \d{1,2}, \d{4}');
 
 -- Listing 14-1: Using regular expressions in a WHERE clause
 
@@ -81,7 +83,7 @@ SELECT array_length(regexp_split_to_array('Phil Mike Tony Steve', ' '), 1);
 
 -- Listing 14-5: Creating and loading the crime_reports table
 -- Data from https://sheriff.loudoun.gov/dailycrime
-
+DROP TABLE crime_reports ;
 CREATE TABLE crime_reports (
     crime_id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     case_number text,
@@ -95,8 +97,10 @@ CREATE TABLE crime_reports (
 );
 
 COPY crime_reports (original_text)
-FROM 'C:\YourDirectory\crime_reports.csv'
+FROM 'C:\Users\micha\SQL\crime_reports.csv'
 WITH (FORMAT CSV, HEADER OFF, QUOTE '"');
+ 
+table crime_reports ;
 
 SELECT original_text FROM crime_reports;
 
@@ -162,6 +166,7 @@ ORDER BY crime_id;
 
 SELECT
     crime_id,
+	regexp_match(original_text, '(?:C0|SO)[0-9]+') as case_number_array,
     (regexp_match(original_text, '(?:C0|SO)[0-9]+'))[1]
         AS case_number
 FROM crime_reports
@@ -219,6 +224,8 @@ SET date_1 =
 
 -- Listing 14-14: Viewing selected crime data
 
+table crime_reports ;
+
 SELECT date_1,
        street,
        city,
@@ -271,7 +278,7 @@ CREATE TABLE president_speeches (
 );
 
 COPY president_speeches (president, title, speech_date, speech_text)
-FROM 'C:\YourDirectory\president_speeches.csv'
+FROM 'C:\Users\micha\SQL\president_speeches.csv'
 WITH (FORMAT CSV, DELIMITER '|', HEADER OFF, QUOTE '@');
 
 SELECT * FROM president_speeches ORDER BY speech_date;
