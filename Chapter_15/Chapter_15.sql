@@ -95,7 +95,7 @@ CREATE TABLE farmers_markets (
 );
 
 COPY farmers_markets
-FROM 'C:\YourDirectory\farmers_markets.csv'
+FROM 'C:\Users\micha\SQL\farmers_markets.csv'
 WITH (FORMAT CSV, HEADER);
 
 SELECT count(*) FROM farmers_markets; -- should return 8,681 rows
@@ -228,7 +228,7 @@ WHERE ST_DWithin(sh.geom::geography,
 -- that covers the casting of the geom column to a geography type.
 CREATE INDEX us_counties_2019_shp_geog_idx ON us_counties_2019_shp USING GIST (CAST(geom AS geography));
 
--- Listing 15-18: Displaying counties near Lincoln, Nebraska
+-- Listing 15-18: Displaying counties near  Lincoln, Nebraska
 
 SELECT sh.name,
        c.state_name,
@@ -265,8 +265,8 @@ WHERE ST_DWithin(sh.geom::geography,
 
 
 -- Import (for use on command line if on macOS or Linux; see Chapter 18)
-shp2pgsql -I -s 4269 -W LATIN1 tl_2019_35049_linearwater.shp santafe_linearwater_2019 | psql -d analysis -U postgres
-shp2pgsql -I -s 4269 -W LATIN1 tl_2019_35049_roads.shp santafe_roads_2019 | psql -d analysis -U postgres
+--shp2pgsql -I -s 4269 -W LATIN1 tl_2019_35049_linearwater.shp santafe_linearwater_2019 | psql -d analysis -U postgres
+--shp2pgsql -I -s 4269 -W LATIN1 tl_2019_35049_roads.shp santafe_roads_2019 | psql -d analysis -U postgres
 
 -- Listing 15-19: Using ST_GeometryType() to determine geometry
 
