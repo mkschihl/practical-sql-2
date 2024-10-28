@@ -45,7 +45,7 @@ CREATE TABLE films (
 );
 
 COPY films (film)
-FROM 'C:\YourDirectory\films.json';
+FROM 'C:\Users\micha\SQL\films.json';
 
 CREATE INDEX idx_film ON films USING GIN (film);
 
@@ -205,7 +205,7 @@ CREATE TABLE earthquakes (
 );
 
 COPY earthquakes (earthquake)
-FROM 'C:\YourDirectory\earthquakes.json';
+FROM 'C:\Users\micha\SQL\earthquakes.json';
 
 CREATE INDEX idx_earthquakes ON earthquakes USING GIN (earthquake);
 
