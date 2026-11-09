@@ -4,7 +4,12 @@
 [Practical SQL, 2nd Edition](https://nostarch.com/practical-sql-2nd-edition/) is a beginner-friendly guide to the database programming language SQL. Author [Anthony DeBarros](https://www.anthonydebarros.com) starts with beginner SQL concepts such as queries, data types, and basic math and aggregation, and then works through intermediate and advanced topics including statistics, cleaning data, GIS, and automating tasks. Along the way, you'll use real-world data from the U.S. Census and other government agencies and learn the fundamentals of good database design. This is a book not only about SQL but about best practices for using it for thorough, accurate data analysis.
 
 ## A Note About Editions
+
 If you're reading the first edition of the book, published in 2018, please [use the code and data in the first edition repository](https://github.com/anthonydb/practical-sql/). If the cover of your copy does not say, "2nd Edition," then you're using the first edition. 
+
+## Important Updates to pgAdmin
+
+In the book, we write SQL queries and manage our PostgreSQL databases with [pgAdmin](https://pgadmin.org), a free and open source graphical user interface. pgAdmin is under continuous development, and its current interface may differ from the screenshots and instructions in the book. Please check [the book FAQ](https://github.com/anthonydb/practical-sql-2/blob/main/faq-updates-errata.md) for updates.
 
 ## Who Is This Book For?
 
@@ -22,11 +27,11 @@ We use [PostgreSQL](https://www.postgresql.org), which is free and open source. 
 
 **Exercises**: The "Try It Yourself" questions and answers for each chapter, listed separately. Try working through the questions before peeking at the answers.
 
-**Software Installation Updates**: Over time, the instructions for installing PostgreSQL and additional components may change. You'll find updates noted at [software-installation-updates.md](https://github.com/anthonydb/practical-sql-2/blob/master/software-installation-updates.md).
+**Software Installation Updates**: Over time, the instructions for installing PostgreSQL and additional components may change. You'll find updates noted at [software-installation-updates.md](https://github.com/anthonydb/practical-sql-2/blob/main/software-installation-updates.md).
 
-**FAQ, Updates, and Errata**: Answers to frequently asked questions,  updates, and corrections are noted at [faq-updates-errata.md](https://github.com/anthonydb/practical-sql-2/blob/master/faq-updates-errata.md).
+**FAQ, Updates, and Errata**: Answers to frequently asked questions,  updates, and corrections are noted at [faq-updates-errata.md](https://github.com/anthonydb/practical-sql-2/blob/main/faq-updates-errata.md).
 
-**Resources**: Updates to the book's Appendix on Additional PostgreSQL Resources at [resources.md](https://github.com/anthonydb/practical-sql-2/blob/master/resources.md).
+**Resources**: Updates to the book's Appendix on Additional PostgreSQL Resources at [resources.md](https://github.com/anthonydb/practical-sql-2/blob/main/resources.md).
 
 ## What's Covered in Each Chapter?
 
@@ -40,8 +45,8 @@ We use [PostgreSQL](https://www.postgresql.org), which is free and open source. 
 * Chapter 8: Table Design That Works for You
 * Chapter 9: Extracting Information by Grouping and Summarizing
 * Chapter 10: Inspecting and Modifying Data
-* Chapter 11: Statistical Functions In SQL
-* Chapter 12: Working With Dates and Times
+* Chapter 11: Statistical Functions in SQL
+* Chapter 12: Working with Dates and Times
 * Chapter 13: Advanced Query Techniques
 * Chapter 14: Mining Text to Find Meaningful Data
 * Chapter 15: Analyzing Spatial Data with PostGIS
@@ -49,7 +54,7 @@ We use [PostgreSQL](https://www.postgresql.org), which is free and open source. 
 * Chapter 17: Saving Time with Views, Functions, and Triggers
 * Chapter 18: Using PostgreSQL from the Command Line
 * Chapter 19: Maintaining Your Database
-* Chapter 20: Telling Your Data's Story
+* Chapter 20: Telling Your Data's Story (no code exercises)
 * Appendix: Additional PostgreSQL Resources
 
 ## How Do I Get the Code and Data?
